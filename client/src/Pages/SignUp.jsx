@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import {useNavigate} from 'react-router-dom'
+import GoogleAuth from '../Components/GoogleAuth';
 
 export default function SignUp() {
   const [user,setUser]=useState({});
@@ -26,7 +27,7 @@ export default function SignUp() {
           setError(data.message);
           return;
         }
-        navigate('/signin');
+        navigate('/privacy');
     } 
     catch(err){
       console.log(err);
@@ -60,8 +61,9 @@ export default function SignUp() {
               id='password'
               onChange={handleInput}
             />
-            <button type='submit' className='text-white px-4 py-2 rounded-md bg-green-600'>Sign Up</button>
+            <button type='submit' className='w-full hover:bg-white hover:text-black font-semibold text-white px-4 py-2 rounded-md bg-green-600'>Sign Up</button>
           </form>
+          <GoogleAuth/>
         </div>
     </div>
   )

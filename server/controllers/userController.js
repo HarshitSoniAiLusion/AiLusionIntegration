@@ -59,3 +59,31 @@ export const signin = async(req,res,next)=>{
         return;
     }
 }
+
+export const googleAuth=async (req,res,next)=>{
+   const {name,email}=req.body;
+   try{
+       const currUser=await user.findOne({email:email});
+       if(currUser){
+           const token=jwt.sign({id:currUser._id},process.env.JWT_SECRET);
+           const {password:pass,...rest}=currUser._doc;
+           res.status(200).cookie('aiLusion_token',token,{httpOnly:true},{expiresIn:'7d'}).json(rest);     
+       }
+       else{
+           const genratePassword=Math.random().toString(36).slice(-8)+Math.random().toString(36).slice(-8);
+           const hashedPassword=bcrypt.hashSync(genratePassword,10);
+           const newUser=new user({
+            username:name.toLowerCase().split(' ').join(''),
+            email:email,
+            password:hashedPassword
+           });
+           await newUser.save();
+           const token=jwt.sign({id:currUser._id},process.env.JWT_SECRET);
+           const {password:pass,...rest}=currUser._doc;
+           res.status(200).cookie('aiLusion_token',token,{httpOnly:true},{expiresIn:'7d'}).json(rest);
+       }
+   }
+   catch(err){
+      return next(err);
+   }
+}

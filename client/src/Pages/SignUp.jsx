@@ -10,8 +10,12 @@ export default function SignUp() {
   }
   const handleSubmit=async(e)=>{
     e.preventDefault();
+    setError(null);
+    if(!user.username || !user.password || !user.email || user.username===''||user.password===''||user.email===''){
+      setError('All fields are Required to Fill');
+      return;
+    }
     try{
-        setError(null);
         const res=await fetch('/api/auth/signup',{
           method:'POST',
           headers:{'Content-Type':'application/json'},

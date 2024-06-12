@@ -10,9 +10,24 @@ export default function SignUp() {
   }
   const handleSubmit=async(e)=>{
     e.preventDefault();
+    setError(null);
+    if(!user.password || !user.email || user.email==='' || user.password===''){
+      setError('All fields are required to fill');
+      return;
+    }
     try{
-      console.log('Done');
-    } 
+      const res=await fetch('/api/auth/signin',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify(user)
+      });
+      const data=await res.json();
+      if(!res.ok){
+        setError(data.message);
+        return;
+      }
+      navigate('/privacy');
+    }  
     catch(err){
       console.log(err);
     }

@@ -1,10 +1,17 @@
 import React from 'react'
 import {useNavigate} from 'react-router-dom'
+import {useSelector} from 'react-redux'
 
 export default function Home() {
   const navigate=useNavigate();
+  const {currUser}=useSelector(state=>state.user);
   const handleClick=()=>{
-    navigate('/signUp');
+    if(!currUser || currUser===null)navigate('/signin');
+    else if(!currUser.isPrivacyChecked) {
+      navigate('/privacy')
+    }else{
+      navigate('/tryOn');
+    }
   }
   return (
     <div className="w-full min-h-screen flex items-center justify-center">

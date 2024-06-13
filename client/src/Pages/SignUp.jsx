@@ -1,22 +1,25 @@
 import React, { useState } from 'react'
 import {useNavigate , Link} from 'react-router-dom'
 import GoogleAuth from '../Components/GoogleAuth';
+import { useSelector , useDispatch } from 'react-redux';
+import { signUpStart , signUpFailure , signUpSuccess } from '../redux/user/userSlice';
 
 export default function SignUp() {
   const [user,setUser]=useState({});
-  const [error,setError]=useState();
+  const {loading,error}=useSelector(state=>state.user);
+  const dispatch=useDispatch();
   const navigate=useNavigate();
   function handleInput(e) {
     setUser({...user,[e.target.id]:e.target.value});
   }
   const handleSubmit=async(e)=>{
     e.preventDefault();
-    setError(null);
     if(!user.username || !user.password || !user.email || user.username===''||user.password===''||user.email===''){
-      setError('All fields are Required to Fill');
+      dispatch(signUpFailure('All fields are Required to Fill'));
       return;
     }
     try{
+        dispatch(signUpStart());
         const res=await fetch('/api/auth/signup',{
           method:'POST',
           headers:{'Content-Type':'application/json'},
@@ -24,13 +27,14 @@ export default function SignUp() {
         });
         const data=await res.json();
         if(!res.ok){
-          setError(data.message);
+          dispatch(signUpFailure(data.message));
           return;
         }
+        dispatch(signUpSuccess(data));
         navigate('/privacy');
     } 
     catch(err){
-      console.log(err);
+      dispatch(signUpFailure(err.message));
     }
   }
   console.log(user);

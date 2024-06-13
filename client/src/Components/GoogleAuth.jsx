@@ -3,14 +3,18 @@ import { AiFillGoogleCircle } from "react-icons/ai";
 import {GoogleAuthProvider, getAuth, signInWithPopup} from 'firebase/auth'
 import { app } from '../firebase.js';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { signInStart , signInFailure , signInSuccess } from '../redux/user/userSlice.js';
 
 export default function GoogleAuth() {
   const navigate=useNavigate();
   const auth=getAuth(app);
+  const dispatch=useDispatch();
   async function handleGoogleAuth() {
     const provider=new GoogleAuthProvider();
     provider.setCustomParameters({prompt:'select_account'});
     try{
+        dispatch(signInStart());
         const resultFromGoogle=await signInWithPopup(auth,provider);
         const res=await fetch('/api/auth/google',{
             method:'POST',
@@ -22,13 +26,14 @@ export default function GoogleAuth() {
         });
         const data=await res.json();
         if(!res.ok){
-            console.log(data.message);
+            dispatch(signInFailure(data.message));
             return;
         }
+        dispatch(signInSuccess(data));
         navigate('/privacy');
     }
     catch(err){
-        console.log(err);
+        dispatch(signInFailure(err.message));
         return;
     }
   }

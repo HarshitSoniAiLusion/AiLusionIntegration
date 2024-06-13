@@ -1,10 +1,10 @@
-import express, { Router } from 'express';
-import { signup ,signin, googleAuth } from '../controllers/userController.js';
+import express from 'express';
+import { getUser ,setUserPrivacy } from '../controllers/userController.js'
+import { verifyToken } from '../utils/isVerifyUser.js';
 
 const router=express.Router();
 
-router.post('/signup',signup);
-router.post('/signin',signin);
-router.post('/google',googleAuth);
+router.get('/getUser/:id',getUser);
+router.put('/setUserPrivacy/:id',verifyToken,setUserPrivacy)
 
 export default router;

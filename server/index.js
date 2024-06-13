@@ -1,12 +1,15 @@
 import express from 'express'
-import signupRoute from './routes/userRoute.js'
+import signupRoute from './routes/authRoute.js'
+import getUserRoute from './routes/userRoute.js'
 import mongoose from 'mongoose';
 import dotenv from 'dotenv'
+import cookieParser  from 'cookie-parser'
 
 dotenv.config();
 
 const app=express();
 app.use(express.json());
+app.use(cookieParser());
 
 mongoose.connect(process.env.DATABASE_URL).then(()=>{
     console.log('AiLusion Database is Connected');
@@ -19,6 +22,7 @@ app.listen(8080,()=>{
 });
 
 app.use('/api/auth',signupRoute);
+app.use('/api/user',getUserRoute)
 
 
 app.use((err,req,res,next)=>{

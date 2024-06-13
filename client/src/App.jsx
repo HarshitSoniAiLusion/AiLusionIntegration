@@ -5,6 +5,8 @@ import SignUp from './Pages/SignUp'
 import SignIn from './Pages/SignIn'
 import DataPrivacy from './Pages/DataPrivacy'
 import VTON from './Pages/VTON'
+import PrivateRouteTryOn from './Components/PrivateRouteTryOn'
+import PrivateRoutePrivacy from './Components/PrivateRoutePrivacy'
 
 function App() {
   return (
@@ -14,8 +16,12 @@ function App() {
             <Route path='/' element={<Home/>}/>
             <Route path='/signup' element={<SignUp/>}/>
             <Route path='/signin' element={<SignIn/>}/>
-            <Route path='/privacy' element={<DataPrivacy/>}/>
-            <Route path='/tryOn' element={<VTON/>}/>
+            <Route element={<PrivateRoutePrivacy/>}>
+                <Route path='/privacy' element={<DataPrivacy/>}/>
+            </Route>
+            <Route element={<PrivateRouteTryOn/>}>
+                <Route path='/tryOn' element={<VTON/>}/>
+            </Route>
         </Routes>
       </BrowserRouter>
     </>

@@ -1,22 +1,25 @@
 import React, { useState } from 'react'
-import {useNavigate} from 'react-router-dom'
+import {useNavigate , Link} from 'react-router-dom'
 import GoogleAuth from '../Components/GoogleAuth';
+import { signInStart,signInSuccess,signInFailure } from '../redux/user/userSlice';
+import { useDispatch, useSelector } from 'react-redux';
 
 export default function SignUp() {
   const [user,setUser]=useState({});
-  const [error,setError]=useState();
+  const {loading,error}=useSelector(state=>state.user);
   const navigate=useNavigate();
+  const dispatch=useDispatch();
   function handleInput(e) {
     setUser({...user,[e.target.id]:e.target.value});
   }
   const handleSubmit=async(e)=>{
     e.preventDefault();
-    setError(null);
     if(!user.password || !user.email || user.email==='' || user.password===''){
-      setError('All fields are required to fill');
+      dispatch(signInFailure('All fields are required to fill'))
       return;
     }
     try{
+      dispatch(signInStart());
       const res=await fetch('/api/auth/signin',{
         method:'POST',
         headers:{'Content-Type':'application/json'},
@@ -24,16 +27,16 @@ export default function SignUp() {
       });
       const data=await res.json();
       if(!res.ok){
-        setError(data.message);
+        dispatch(signInFailure(data.message));
         return;
       }
+      dispatch(signInSuccess(data));
       navigate('/privacy');
     }  
     catch(err){
-      console.log(err);
+      dispatch(signInFailure(err.message));
     }
   }
-  console.log(user);
   return (
     <div className='w-full min-h-screen flex flex-col gap-4 items-center justify-center'>
       {error && <p className='text-red-600 font-semibold bg-red-300 w-1/2 p-3 rounded-lg'>{error}</p>}
@@ -57,6 +60,7 @@ export default function SignUp() {
             <button type='submit' className='w-full hover:bg-white hover:text-black font-semibold text-white px-4 py-2 rounded-md bg-green-600'>Sign In</button>
           </form>
           <GoogleAuth/>
+          <p className='text-white font-semibold text-center mt-5'>Not have the account ? <Link className='text-blue-500 hover:underline' to={'/signup'}>Sign Up</Link></p>
         </div>
     </div>
   )

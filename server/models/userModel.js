@@ -32,6 +32,10 @@ const userSchema=new mongoose.Schema({
             type:Number,
         }
     },
+    isPrivacyChecked:{
+        type:Boolean,
+        default:false
+    },
     freeTrial:{
         type:Number,
         default:3

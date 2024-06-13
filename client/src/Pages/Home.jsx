@@ -1,8 +1,10 @@
 import React from 'react'
+import {useNavigate} from 'react-router-dom'
 
 export default function Home() {
+  const navigate=useNavigate();
   const handleClick=()=>{
-    console.log('Hii Harshu');
+    navigate('/signUp');
   }
   return (
     <div className="w-full min-h-screen flex items-center justify-center">

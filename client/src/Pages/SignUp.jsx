@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import {useNavigate} from 'react-router-dom'
+import {useNavigate , Link} from 'react-router-dom'
 import GoogleAuth from '../Components/GoogleAuth';
 
 export default function SignUp() {
@@ -64,6 +64,7 @@ export default function SignUp() {
             <button type='submit' className='w-full hover:bg-white hover:text-black font-semibold text-white px-4 py-2 rounded-md bg-green-600'>Sign Up</button>
           </form>
           <GoogleAuth/>
+          <p className='text-white font-semibold text-center mt-5'>Have already the account ? <Link className='text-blue-500 hover:underline' to={'/signin'}>Sign in</Link></p>
         </div>
     </div>
   )

@@ -5,9 +5,10 @@ export const getImages=(req,res,next)=>{
 }
 
 export const addImage=async(req,res,next)=>{
+    console.log(req.body);
     const {id}=req.params;
-    const {garmentImg}=req.body;
-    if(!garmentImg){
+    const garmentImgs=req.body;
+    if(garmentImgs.length<=0){
         next(500,'URL is Required');
         return;
     }
@@ -16,11 +17,13 @@ export const addImage=async(req,res,next)=>{
         return;
     }
     try{
-        const img=await new images ({
-           imageUrl:garmentImg,
-           owner:id
+        garmentImgs.map(async(garmentImg)=>{
+            const img=new images ({
+                imageUrl:garmentImg,
+                owner:id
+            });
+            await img.save();
         });
-        await img.save();
         res.status(200).json(img);
     }catch(err){
         next(err);

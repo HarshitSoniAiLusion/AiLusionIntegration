@@ -3,6 +3,7 @@ import { FaCloudUploadAlt } from "react-icons/fa";
 import {getDownloadURL, getStorage, uploadBytesResumable,ref} from 'firebase/storage'
 import {app} from '../firebase.js'
 import {useSelector} from 'react-redux';
+import SelectImage from '../Components/SelectImage.jsx';
 
 export default function VTON() {
   const filePickRef1=useRef();
@@ -11,7 +12,7 @@ export default function VTON() {
   const [humanFile,setHumanFile]=useState();
   const [garmentFile,setGarmentFile]=useState();
   const [humanImg,setHumanImg]=useState();
-  const [garmentImg,setGarmentImg]=useState();
+  const [garmentImg,setGarmentImg]=useState([]);
   const [images,setImages]=useState({});
   const [imageFileUploading,setImageFileUploading]=useState(false);
   const [imageFileUploadError,setImageFileUploadError]=useState(null);
@@ -21,14 +22,12 @@ export default function VTON() {
     const file=e.target.files[0];
     if(file){
       setHumanFile(file);
-      setHumanImg(URL.createObjectURL(file));
     }
   }
   const handleGarmentImage=(e)=>{
     const file=e.target.files[0];
     if(file){
       setGarmentFile(file);
-      setGarmentImg(URL.createObjectURL(file));
     }
   }
   useEffect(()=>{
@@ -67,11 +66,12 @@ export default function VTON() {
             setImageFileUploadError(null);
             setImageFileUploadProgress(null);
             setImageFileUploading(false); 
-            setImages({...images,['humanImg']:downloadUrl});
+            setHumanImg(downloadUrl);
         });
       }
     )
   }
+  console.log(garmentImg);
   const uploadGarmentImg=()=>{
     setImgError(null);
     setImageFileUploading(true);
@@ -99,7 +99,7 @@ export default function VTON() {
             setImageFileUploadError(null);
             setImageFileUploadProgress(null);
             setImageFileUploading(false);
-            setImages({...images,['garmentImg']:downloadUrl});
+            setGarmentImg([...garmentImg,downloadUrl]);
             setGarmentFile(null);
         });
       }
@@ -115,7 +115,7 @@ export default function VTON() {
       const res=await fetch(`/api/images/addImage/${currUser._id}`,{
         method:'POST',
         headers:{'Content-Type':'application/json'},
-        body:JSON.stringify(images)
+        body:JSON.stringify(garmentImg)
       });
       const data=await res.json();
       if(!res.ok){
@@ -146,19 +146,24 @@ export default function VTON() {
             </button>
           </div>
           }
-          {garmentImg? 
-            <img src={garmentImg} className='w-62 h-96'/>
-          :<div className="border-2 border-black h-60 p-5 flex flex-col items-center justify-evenly rounded-lg">
+          {garmentImg.length>0 &&
+            <div className="">
+                {garmentImg.map((gimg)=>(<img src={gimg} className='w-20 h-32'/>))}
+            </div>
+          }
+          <div className="border-2 border-black h-60 p-5 flex flex-col items-center justify-evenly rounded-lg">
             <h2 className='text-md font-semibold'>Garment Image</h2>
             <input type="file" disabled={imageFileUploading} accept='images/*' onChange={handleGarmentImage}  ref={filePickRef2} hidden/>
             <button className="" onClick={()=>filePickRef2.current.click()}>
                 <FaCloudUploadAlt className='text-3xl'/>
             </button>
-          </div>}
+          </div>
         </div>
       </div>
       <button onClick={handleImageStor} className='text-white border-2 border-green-400 hover:bg-white hover:text-black bg-green-400 font-semibold w-32 py-2 rounded-lg'>TryOn</button>
-      <div className="w-full">Select Images</div>
+      <div className="w-full">
+        <SelectImage/>
+      </div>
     </div>
   )
 }

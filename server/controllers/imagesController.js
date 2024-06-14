@@ -6,14 +6,18 @@ export const getImages=(req,res,next)=>{
 
 export const addImage=async(req,res,next)=>{
     const {id}=req.params;
-    const {url}=req.body;
+    const {garmentImg}=req.body;
+    if(!garmentImg){
+        next(500,'URL is Required');
+        return;
+    }
     if(id!=req.user.id){
         next(errorHandler(400,'Unauthorised User'));
         return;
     }
     try{
         const img=await new images ({
-           imageUrl:url,
+           imageUrl:garmentImg,
            owner:id
         });
         await img.save();

@@ -4,6 +4,7 @@ import getUserRoute from './routes/userRoute.js'
 import mongoose from 'mongoose';
 import dotenv from 'dotenv'
 import cookieParser  from 'cookie-parser'
+import imagesRoute from './routes/imagesRoute.js'
 
 dotenv.config();
 
@@ -22,7 +23,8 @@ app.listen(8080,()=>{
 });
 
 app.use('/api/auth',signupRoute);
-app.use('/api/user',getUserRoute)
+app.use('/api/user',getUserRoute);
+app.use('/api/images',imagesRoute);
 
 
 app.use((err,req,res,next)=>{

@@ -28,7 +28,12 @@ export const signup=async(req,res,next)=>{
         await newUser.save();
         const token=jwt.sign({id:newUser._id},process.env.JWT_SECRET);
         const {password:pass,...rest}=newUser._doc;
-        res.status(200).cookie('aiLusion_token',token,{httpOnly:true},{expiresIn:'7d'}).json(rest);
+        res.status(200).cookie('aiLusion_token', token, {
+            maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
+            httpOnly: true, // Ensures the cookie is sent only over HTTP(S), not client JavaScript
+            secure: process.env.NODE_ENV === 'production', // Set secure flag for production
+            path: '/', // Make it available for the whole domain
+        }).json(rest);
     }
     catch(err){
         next(err);
@@ -52,7 +57,12 @@ export const signin = async(req,res,next)=>{
         }
         const {password:pass,...rest}=currUser._doc;
         const token=jwt.sign({id:currUser._id},process.env.JWT_SECRET);
-        res.status(200).cookie('aiLusion_token',token,{httpOnly:true},{expiresIn:'7d'}).json(rest);
+        res.status(200).cookie('aiLusion_token', token, {
+            maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
+            httpOnly: true, // Ensures the cookie is sent only over HTTP(S), not client JavaScript
+            secure: process.env.NODE_ENV === 'production', // Set secure flag for production
+            path: '/', // Make it available for the whole domain
+          }).json(rest);
     } 
     catch(err){
         next(err);
@@ -67,7 +77,12 @@ export const googleAuth=async (req,res,next)=>{
        if(currUser){
            const token=jwt.sign({id:currUser._id},process.env.JWT_SECRET);
            const {password:pass,...rest}=currUser._doc;
-           res.status(200).cookie('aiLusion_token',token,{httpOnly:true},{expiresIn:'7d'}).json(rest);     
+           res.status(200).cookie('aiLusion_token', token, {
+            maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
+            httpOnly: true, // Ensures the cookie is sent only over HTTP(S), not client JavaScript
+            secure: process.env.NODE_ENV === 'production', // Set secure flag for production
+            path: '/', // Make it available for the whole domain
+          }).json(rest);     
        }
        else{
            const genratePassword=Math.random().toString(36).slice(-8)+Math.random().toString(36).slice(-8);
@@ -80,7 +95,12 @@ export const googleAuth=async (req,res,next)=>{
            await newUser.save();
            const token=jwt.sign({id:currUser._id},process.env.JWT_SECRET);
            const {password:pass,...rest}=currUser._doc;
-           res.status(200).cookie('aiLusion_token',token,{httpOnly:true},{expiresIn:'7d'}).json(rest);
+           res.status(200).cookie('aiLusion_token', token, {
+            maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
+            httpOnly: true, // Ensures the cookie is sent only over HTTP(S), not client JavaScript
+            secure: process.env.NODE_ENV === 'production', // Set secure flag for production
+            path: '/', // Make it available for the whole domain
+          }).json(rest);
        }
    }
    catch(err){

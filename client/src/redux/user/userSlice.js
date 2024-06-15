@@ -61,6 +61,11 @@ export const userSlice=createSlice({
         updateSubscriptionStart:(state)=>{
             state.loading=true;
             state.error=null;
+        },
+        removeData:(state)=>{
+            state.loading=false;
+            state.error=null;
+            state.currUser=null;
         }
     },
 });
@@ -77,7 +82,8 @@ export const {
     CheckPrivacyStart,
     updateSubscriptionSuccess,
     updateSubscriptionStart,
-    updateSubscriptionFailure
+    updateSubscriptionFailure,
+    removeData
 } = userSlice.actions;
 
 export default userSlice.reducer;

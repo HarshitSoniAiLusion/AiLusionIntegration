@@ -5,6 +5,7 @@ import {app} from '../firebase.js'
 import {useSelector} from 'react-redux';
 import SelectImage from '../Components/SelectImage.jsx';
 
+
 export default function VTON() {
   const filePickRef1=useRef();
   const filePickRef2=useRef();
@@ -21,6 +22,9 @@ export default function VTON() {
   const [imgError,setImgError]=useState(null);
   const [selectedImages,setSelectedImages]=useState([]);
   const [loading,setLoading]=useState(false);
+
+
+  
   const handleHumanImage=(e)=>{
     const file=e.target.files[0];
     if(file){
@@ -108,10 +112,8 @@ export default function VTON() {
       }
     )
   }
-  const handleImageStor=async()=>{
-    //if Uploaded than stor the Images and call the GPU
-    if(isUploadGrament){
-      setImgError(null);
+  const storGarmentImage=async()=>{
+    setImgError(null);
       if(!humanImg || !garmentImg){
         setImgError('First Select the Images');
         return;
@@ -136,6 +138,28 @@ export default function VTON() {
         setImgError(err.name);
         return;
       }
+  }
+  const handleImageStor=async()=>{
+    //if Uploaded than stor the Images and call the GPU
+    if(isUploadGrament){
+        //Step-1 Check the SubsCription and Trial
+        if(currUser && currUser.trial>0){
+
+        }
+        else if(currUser.isSubscribed.trialRemaining && currUser.isSubscribed.trialRemaining>0){
+
+        }
+        else if(currUser.isSubscribed.trialRemaining && currUser.isSubscribed.trialRemaining<=0){
+          if(new Date().getDate()-7<=currUser.isSubscribed.endTime.gerDate()){
+
+          }
+          else{
+
+          }
+        }
+        else{
+
+        }
     }
     else{
       //Call the GPU Server

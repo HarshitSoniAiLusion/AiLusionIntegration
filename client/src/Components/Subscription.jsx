@@ -1,12 +1,14 @@
 import React, { useState } from 'react'
-import { useSelector } from 'react-redux';
+import { useSelector , useDispatch } from 'react-redux';
 import { RxCross2 } from "react-icons/rx";
-
+import {updateSubscriptionFailure,updateSubscriptionSuccess,updateSubscriptionStart} from '../redux/user/userSlice.js'
 export default function Subscription() {
     const {currUser}=useSelector(state=>state.user);
     const [updated,setUpdated]=useState(null);
+    const dispatch=useDispatch();
     async function handleSubscribed(trial) {
         try {
+            dispatch(updateSubscriptionStart());
             const res=await fetch(`/api/user/subscribe/${currUser._id}`,{
                 method:'PATCH',
                 headers:{'Content-Type':'Application/json'},
@@ -14,12 +16,13 @@ export default function Subscription() {
             });
             const data=await res.json();
             if(!res.ok){
-                console.log(data.message);
+                dispatch(updateSubscriptionFailure(data.message))
             }
+            dispatch(updateSubscriptionSuccess(data));
             setUpdated(`Your Trials now increase by ${trial}`);
             return;
         } catch (err) {
-            console.log(err);
+            dispatch(updateSubscriptionFailure(err.message));
         }
     }
   return (

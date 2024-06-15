@@ -7,6 +7,7 @@ import DataPrivacy from './Pages/DataPrivacy'
 import VTON from './Pages/VTON'
 import PrivateRouteTryOn from './Components/PrivateRouteTryOn'
 import PrivateRoutePrivacy from './Components/PrivateRoutePrivacy'
+import Subscription from './Components/Subscription'
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
             <Route path='/' element={<Home/>}/>
             <Route path='/signup' element={<SignUp/>}/>
             <Route path='/signin' element={<SignIn/>}/>
+            <Route path='/subscribe' element={<Subscription/>}/>
             <Route element={<PrivateRoutePrivacy/>}>
                 <Route path='/privacy' element={<DataPrivacy/>}/>
             </Route>

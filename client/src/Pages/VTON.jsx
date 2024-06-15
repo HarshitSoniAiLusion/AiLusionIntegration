@@ -13,11 +13,14 @@ export default function VTON() {
   const [garmentFile,setGarmentFile]=useState();
   const [humanImg,setHumanImg]=useState();
   const [garmentImg,setGarmentImg]=useState([]);
+  const [isUploadGrament,setIsUploadGarment]=useState(false);
   const [images,setImages]=useState({});
   const [imageFileUploading,setImageFileUploading]=useState(false);
   const [imageFileUploadError,setImageFileUploadError]=useState(null);
   const [imageFileUploadProgress,setImageFileUploadProgress]=useState(null);
   const [imgError,setImgError]=useState(null);
+  const [selectedImages,setSelectedImages]=useState([]);
+  const [loading,setLoading]=useState(false);
   const handleHumanImage=(e)=>{
     const file=e.target.files[0];
     if(file){
@@ -71,7 +74,6 @@ export default function VTON() {
       }
     )
   }
-  console.log(garmentImg);
   const uploadGarmentImg=()=>{
     setImgError(null);
     setImageFileUploading(true);
@@ -99,6 +101,7 @@ export default function VTON() {
             setImageFileUploadError(null);
             setImageFileUploadProgress(null);
             setImageFileUploading(false);
+            setIsUploadGarment(true);
             setGarmentImg([...garmentImg,downloadUrl]);
             setGarmentFile(null);
         });
@@ -106,34 +109,42 @@ export default function VTON() {
     )
   }
   const handleImageStor=async()=>{
-    setImgError(null);
-    if(!humanImg || !garmentImg){
-      setImgError('First Select the Images');
-      return;
-    }
-    try{
-      const res=await fetch(`/api/images/addImage/${currUser._id}`,{
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body:JSON.stringify(garmentImg)
-      });
-      const data=await res.json();
-      if(!res.ok){
-        setImgError(data.message);
+    //if Uploaded than stor the Images and call the GPU
+    if(isUploadGrament){
+      setImgError(null);
+      if(!humanImg || !garmentImg){
+        setImgError('First Select the Images');
         return;
       }
-      console.log(data);
-      return;
+      try{
+        setLoading(true);
+        const res=await fetch(`/api/images/addImage/${currUser._id}`,{
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify(garmentImg)
+        });
+        const data=await res.json();
+        if(!res.ok){
+          setImgError(data.message);
+          return;
+        }
+        setLoading(false);
+        console.log(data);
+        return;
+      }
+      catch(err){
+        setImgError(err.name);
+        return;
+      }
     }
-    catch(err){
-      setImgError(err.name);
-      return;
+    else{
+      //Call the GPU Server
     }
   }
   return (
     <div className="min-h-screen flex flex-col items-center justify-center gap-6 p-10">
       <div className="flex items-center flex-col w-full">
-        {imgError && <p className='text-red-500 text-lg font-semibold'>{imgError}</p>}
+        {imgError && <p className='text-red-700 bg-red-300 rounded-lg px-4 py-2 text-lg font-semibold'>{imgError}</p>}
         {imageFileUploading && <p className='text-lg font-semibold'>{imageFileUploadProgress}%</p>}
         <div className="flex items-center justify-evenly w-full">
           {humanImg?
@@ -151,18 +162,29 @@ export default function VTON() {
                 {garmentImg.map((gimg)=>(<img src={gimg} className='w-20 h-32'/>))}
             </div>
           }
-          <div className="border-2 border-black h-60 p-5 flex flex-col items-center justify-evenly rounded-lg">
+          <div className={`border-black ${ (imageFileUploading || selectedImages.length>0) && 'border-gray-300'} border-2  h-60 p-5 flex flex-col items-center justify-evenly rounded-lg`}>
             <h2 className='text-md font-semibold'>Garment Image</h2>
-            <input type="file" disabled={imageFileUploading} accept='images/*' onChange={handleGarmentImage}  ref={filePickRef2} hidden/>
+            <input 
+              type="file" 
+              disabled={imageFileUploading || selectedImages.length>0} 
+              accept='images/*' 
+              onChange={handleGarmentImage}  
+              ref={filePickRef2}
+              hidden
+            />
             <button className="" onClick={()=>filePickRef2.current.click()}>
                 <FaCloudUploadAlt className='text-3xl'/>
             </button>
           </div>
         </div>
       </div>
-      <button onClick={handleImageStor} className='text-white border-2 border-green-400 hover:bg-white hover:text-black bg-green-400 font-semibold w-32 py-2 rounded-lg'>TryOn</button>
+      <button 
+        onClick={handleImageStor} 
+        className='text-white border-2 border-green-400 hover:bg-white hover:text-black bg-green-400 font-semibold w-32 py-2 rounded-lg'
+        disabled={loading}
+      >{loading?'...Loading':'TryOn'}</button>
       <div className="w-full">
-        <SelectImage/>
+        <SelectImage isUploadGrament={isUploadGrament} setSelectedImages={setSelectedImages} selectedImages={selectedImages}/>
       </div>
     </div>
   )

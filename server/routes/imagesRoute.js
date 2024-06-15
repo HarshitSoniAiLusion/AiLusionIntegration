@@ -4,7 +4,7 @@ import {verifyToken} from '../utils/isVerifyUser.js'
 
 const router=express.Router();
  
-router.get('/getImages',getImages);
+router.get('/getImages/:id',verifyToken,getImages);
 router.post('/addImage/:id',verifyToken,addImage);
 
 export default router;

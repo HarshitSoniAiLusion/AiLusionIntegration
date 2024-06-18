@@ -66,6 +66,11 @@ export const userSlice=createSlice({
             state.loading=false;
             state.error=null;
             state.currUser=null;
+        },
+        logOutSuccess:(state)=>{
+            state.loading=false;
+            state.error=null;
+            state.currUser=null;
         }
     },
 });
@@ -83,7 +88,8 @@ export const {
     updateSubscriptionSuccess,
     updateSubscriptionStart,
     updateSubscriptionFailure,
-    removeData
+    removeData,
+    logOutSuccess
 } = userSlice.actions;
 
 export default userSlice.reducer;

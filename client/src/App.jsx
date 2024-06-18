@@ -4,15 +4,17 @@ import Home from './Pages/Home'
 import SignUp from './Pages/SignUp'
 import SignIn from './Pages/SignIn'
 import DataPrivacy from './Pages/DataPrivacy'
-import VTON from './Pages/VTON'
 import PrivateRouteTryOn from './Components/PrivateRouteTryOn'
 import PrivateRoutePrivacy from './Components/PrivateRoutePrivacy'
 import Subscription from './Components/Subscription'
+import Header from './Components/Header'
+import TryOn from './Pages/TryOn'
 
 function App() {
   return (
     <>
       <BrowserRouter>
+        <Header/>
         <Routes>
             <Route path='/' element={<Home/>}/>
             <Route path='/signup' element={<SignUp/>}/>
@@ -22,7 +24,7 @@ function App() {
                 <Route path='/privacy' element={<DataPrivacy/>}/>
             </Route>
             <Route element={<PrivateRouteTryOn/>}>
-                <Route path='/tryOn' element={<VTON/>}/>
+                <Route path='/tryOn' element={<TryOn/>}/>
             </Route>
         </Routes>
       </BrowserRouter>

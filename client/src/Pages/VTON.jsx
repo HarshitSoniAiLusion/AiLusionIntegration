@@ -24,7 +24,7 @@ export default function VTON() {
   const [loading,setLoading]=useState(false);
 
 
-  
+
   const handleHumanImage=(e)=>{
     const file=e.target.files[0];
     if(file){
@@ -45,6 +45,8 @@ export default function VTON() {
       uploadGarmentImg()
     }
   },[humanFile , garmentFile]);
+  console.log(humanFile);
+  console.log(garmentFile);
 
   const uploadHumanImg=()=>{
     setImgError(null);
@@ -78,6 +80,7 @@ export default function VTON() {
       }
     )
   }
+  console.log(humanImg);
   const uploadGarmentImg=()=>{
     setImgError(null);
     setImageFileUploading(true);
@@ -107,7 +110,6 @@ export default function VTON() {
             setImageFileUploading(false);
             setIsUploadGarment(true);
             setGarmentImg([...garmentImg,downloadUrl]);
-            setGarmentFile(null);
         });
       }
     )
@@ -139,12 +141,38 @@ export default function VTON() {
         return;
       }
   }
+  console.log(selectedImages);
+  const handleGpuServerCall=async(urls)=>{
+    try{
+        const res=await fetch(`/api/gpu/tryOn/${currUser._id}`,{
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify(urls)
+        });
+        const data=await res.json();
+        if(!res.ok){
+          console.log(data.message);
+          return;
+        }
+        console.log(data);
+        return;
+    }catch(err){
+      console.log(err); 
+    }
+  }
   const handleImageStor=async()=>{
     //if Uploaded than stor the Images and call the GPU
     if(isUploadGrament){
         //Step-1 Check the SubsCription and Trial
-        if(currUser && currUser.trial>0){
-
+        if(currUser && currUser.freeTrial>0 && Object.keys(currUser.isSubscribed).length==0){//for the new user
+          const urls={
+            humanFile:humanFile,
+            garmentFile:garmentFile
+          }
+          console.log(humanFile);
+          console.log(garmentFile);
+          console.log(urls);
+          handleGpuServerCall(urls);
         }
         else if(currUser.isSubscribed.trialRemaining && currUser.isSubscribed.trialRemaining>0){
 
@@ -167,6 +195,7 @@ export default function VTON() {
   }
   return (
     <div className="min-h-screen flex flex-col items-center justify-center gap-6 p-10">
+      <img src="output_image.jpeg" alt="img" />
       <div className="flex items-center flex-col w-full">
         {imgError && <p className='text-red-700 bg-red-300 rounded-lg px-4 py-2 text-lg font-semibold'>{imgError}</p>}
         {imageFileUploading && <p className='text-lg font-semibold'>{imageFileUploadProgress}%</p>}

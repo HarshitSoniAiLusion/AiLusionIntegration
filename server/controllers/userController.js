@@ -46,3 +46,11 @@ export const subscribeUser=async(req,res,next)=>{
         next(err);
     }
 }
+export const SignOutUser=(req,res,next)=>{
+    try{
+        res.clearCookie('aiLusion_token').status(200).json('Successfully signOut User');
+    }
+    catch(err){
+        next(err);
+    }
+}

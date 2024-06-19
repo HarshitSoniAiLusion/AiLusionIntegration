@@ -1,13 +1,13 @@
 import nodemailer from 'nodemailer'
 import Mailgen from 'mailgen'
 
-export default function sendMailSubscrib(username,useremail){
+export default function sendMailSubscrib(username,useremail,myemail,password){
 
     let config={
         service:'gmail',
         auth:{
-            user:'harshit@ailusion.in',
-            pass:'erfs ubsn jzhv lkbt'
+            user:myemail,
+            pass:password
         }
     }
     // Create a transporter object

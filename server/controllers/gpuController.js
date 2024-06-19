@@ -14,30 +14,29 @@ export const tryOn=async(req,res,next)=>{
     const currUser=await user.findById(req.params.id);
     console.log(currUser);
 
-    // sendMailSubscrib(currUser.username,currUser.email);
 
     if(currUser.freeTrial>0 && !currUser.isSubscribed.trialRemaining){
         //Update the Trial
         currUser.freeTrial--;
         await currUser.save();
         //Send the Mail And call The GPU
-        if(currUser.freeTrial===0)sendMailSubscrib(currUser.username,currUser.email);
+        if(currUser.freeTrial===0)sendMailSubscrib(currUser.username,currUser.email,process.env.Your_Email,process.env.Your_Password);
     }
     else if(currUser.freeTrial<=0 && currUser.isSubscribed.trialRemaining<=0){
       if(new Date().getDate()-currUser.isSubscribed.endTime.getDate()<=7){
         //Send the Mail  1 Step and Then Call the GPU
-        sendMailSubscrib(currUser.username,currUser.email);
+        sendMailSubscrib(currUser.username,currUser.email,process.env.Your_Email,process.env.Your_Password);
       }
       else{
         //Send the Mail 1 step
-        sendMailSubscrib(currUser.username,currUser.email);
+        sendMailSubscrib(currUser.username,currUser.email,process.env.Your_Email,process.env.Your_Password);
         //Send the res as a Not Allow to Try On Update Error
         return next(errorHandler(500,'Get Subscribed the AiLusion'))
       }
     }
     else if(currUser.freeTrial<=0 && !currUser.isSubscribed.trialRemaining){
       //send the Mail 1 step 
-      sendMailSubscrib(currUser.username,currUser.email);
+      sendMailSubscrib(currUser.username,currUser.email,process.env.Your_Email,process.env.Your_Password);
       //Send an error not allow to try on
       return next(errorHandler(500,'Your Free Trials Ended now Subscribe the AiLusion'));
     }

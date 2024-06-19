@@ -11,12 +11,13 @@ export default function Subscription() {
             dispatch(updateSubscriptionStart());
             const res=await fetch(`/api/user/subscribe/${currUser._id}`,{
                 method:'PATCH',
-                headers:{'Content-Type':'Application/json'},
+                headers:{'Content-Type':'application/json'},
                 body:JSON.stringify({trial})
             });
             const data=await res.json();
             if(!res.ok){
                 dispatch(updateSubscriptionFailure(data.message))
+                return;
             }
             dispatch(updateSubscriptionSuccess(data));
             setUpdated(`Your Trials now increase by ${trial}`);

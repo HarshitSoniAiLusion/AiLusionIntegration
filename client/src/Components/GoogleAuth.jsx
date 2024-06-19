@@ -20,7 +20,7 @@ export default function GoogleAuth() {
             method:'POST',
             headers:{'Content-Type':'application/json'},
             body:JSON.stringify({
-                name:resultFromGoogle.displayName,
+                name:resultFromGoogle.user.displayName,
                 email:resultFromGoogle.user.email
             })
         });

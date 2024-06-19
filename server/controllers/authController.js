@@ -93,8 +93,8 @@ export const googleAuth=async (req,res,next)=>{
             password:hashedPassword
            });
            await newUser.save();
-           const token=jwt.sign({id:currUser._id},process.env.JWT_SECRET);
-           const {password:pass,...rest}=currUser._doc;
+           const token=jwt.sign({id:newUser._id},process.env.JWT_SECRET);
+           const {password:pass,...rest}=newUser._doc;
            res.status(200).cookie('aiLusion_token', token, {
             maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
             httpOnly: true, // Ensures the cookie is sent only over HTTP(S), not client JavaScript

@@ -26,7 +26,7 @@ export const subscribeUser=async(req,res,next)=>{
     }
     try{
         const curruser=await user.findById(req.params.id);
-        if(curruser.isSubscribed && Object.keys(curruser.isSubscribed).length > 0){
+        if(curruser.isSubscribed && curruser.isSubscribed.trialRemaining){
             curruser.isSubscribed.startTime=new Date();
             curruser.isSubscribed.totalTrials+=trial;
             curruser.isSubscribed.trialRemaining+=trial;
@@ -35,8 +35,8 @@ export const subscribeUser=async(req,res,next)=>{
             curruser.isSubscribed={
                 startTime: new Date(),
                 totalTrials: trial,
-                remainingTrials: trial,
-                usedTrials: 0
+                trialRemaining: trial,
+                trialUses: 0
             }
         }
         await curruser.save();

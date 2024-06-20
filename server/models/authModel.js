@@ -39,6 +39,9 @@ const userSchema=new mongoose.Schema({
     freeTrial:{
         type:Number,
         default:3
+    },
+    subscribedMailSendAt:{
+        type:Date,
     }
 },{timestamps:true});
 

@@ -71,6 +71,23 @@ export const userSlice=createSlice({
             state.loading=false;
             state.error=null;
             state.currUser=null;
+        },
+        getTryOnSuccess:(state,action)=>{
+            state.loading=false;
+            state.error=null;
+            state.currUser=action.payload;
+        },
+        getTryOnStart:(state)=>{
+            state.loading=true;
+            state.error=null;
+        },
+        getTryOnFailure:(state,action)=>{
+            state.loading=false;
+            state.error=action.payload;
+        },
+        clossError:(state)=>{
+            state.loading=false,
+            state.error=null;
         }
     },
 });
@@ -89,6 +106,10 @@ export const {
     updateSubscriptionStart,
     updateSubscriptionFailure,
     removeData,
+    getTryOnFailure,
+    getTryOnSuccess,
+    getTryOnStart,
+    clossError,
     logOutSuccess
 } = userSlice.actions;
 

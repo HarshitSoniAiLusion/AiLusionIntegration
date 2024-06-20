@@ -1,7 +1,7 @@
 import nodemailer from 'nodemailer'
 import Mailgen from 'mailgen'
 
-export default function sendMailSubscrib(username,useremail,myemail,password){
+export default async function sendMailSubscrib(username,useremail,myemail,password){
 
     let config={
         service:'gmail',
